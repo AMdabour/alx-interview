@@ -7,16 +7,12 @@ def canUnlockAll(boxes):
     if not boxes or not boxes[0]:
         return False
 
-    n = len(boxes)
-    visited = [False] * n
-    visited[0] = True
-    stack = [0]
+    acc = 0
 
-    while stack:
-        current_box = stack.pop()
-        for key in boxes[current_box]:
-            if 0 <= key < n and not visited[key]:
-                visited[key] = True
-                stack.append(key)
+    for i in range(1, len(boxes)):
+        for j in range(0, len(boxes)):
+            if i in boxes[j] and i != j:
+                acc += 1
+                break
 
-    return all(visited)
+    return (acc == (len(boxes) - 1))
