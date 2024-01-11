@@ -4,6 +4,8 @@
 
 def canUnlockAll(boxes):
     """returns true if openable or false if not"""
+    if not boxes or not boxes[0]:
+        return False
     acc = 0
 
     for i in range(1, len(boxes)):
