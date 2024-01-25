@@ -51,7 +51,10 @@ def main():
                 print_metrics(total_size, status_code_count)
                 lines = []
 
-    except KeyboardInterrupt:
+    except Exception:
+        pass
+
+    finally:
         total_size, status_code_count = compute_metrics(lines, total_size)
         print_metrics(total_size, status_code_count)
 
