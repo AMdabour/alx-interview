@@ -1,63 +1,37 @@
 #!/usr/bin/python3
-"""a script that reads stdin line by line and computes metrics"""
+'''a script that reads stdin line by line and computes metrics'''
+
+
 import sys
-from collections import defaultdict
 
+cache = {'200': 0, '301': 0, '400': 0, '401': 0,
+         '403': 0, '404': 0, '405': 0, '500': 0}
+total_size = 0
+counter = 0
 
-def compute_metrics(lines, total_size=0):
-    """compute metrics"""
-    status_code_count = defaultdict(int)
+try:
+    for line in sys.stdin:
+        line_list = line.split(" ")
+        if len(line_list) > 4:
+            code = line_list[-2]
+            size = int(line_list[-1])
+            if code in cache.keys():
+                cache[code] += 1
+            total_size += size
+            counter += 1
 
-    for line in lines:
-        try:
-            parts = line.split()
-            status_code = int(parts[-2])
-            file_size = int(parts[-1])
-            # print(parts)
-            # Check if the line follows the specified format
-            if (
-                parts[4] == '"GET' and
-                parts[5].startswith("/projects/") and
-                parts[6] == 'HTTP/1.1"'
-            ):
-                total_size += file_size
-                status_code_count[status_code] += 1
+        if counter == 10:
+            counter = 0
+            print('File size: {}'.format(total_size))
+            for key, value in sorted(cache.items()):
+                if value != 0:
+                    print('{}: {}'.format(key, value))
 
-        except (ValueError, IndexError):
-            # Skip lines that don't match the expected format
-            continue
+except Exception as err:
+    pass
 
-    return total_size, status_code_count
-
-
-def print_metrics(total_size, status_code_count):
-    """print metrics"""
-    print(f"File size: {total_size}")
-
-    for code in sorted(status_code_count):
-        print(f"{code}: {status_code_count[code]}")
-
-
-def main():
-    """main function for handling everything"""
-    lines = []
-    try:
-        total_size = 0
-        for line in sys.stdin:
-            lines.append(line.strip())
-            if len(lines) == 10:
-                total_size, status_code_count = compute_metrics(lines,
-                                                                total_size)
-                print_metrics(total_size, status_code_count)
-                lines = []
-
-    except Exception:
-        pass
-
-    finally:
-        total_size, status_code_count = compute_metrics(lines, total_size)
-        print_metrics(total_size, status_code_count)
-
-
-if __name__ == "__main__":
-    main()
+finally:
+    print('File size: {}'.format(total_size))
+    for key, value in sorted(cache.items()):
+        if value != 0:
+            print('{}: {}'.format(key, value))
