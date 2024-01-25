@@ -4,15 +4,14 @@ import sys
 from collections import defaultdict
 
 
-def compute_metrics(lines):
+def compute_metrics(lines, total_size=0):
     """compute metrics"""
-    total_size = 0
+    #total_size = 0
     status_code_count = defaultdict(int)
 
     for line in lines:
         try:
             parts = line.split()
-            ip_address = parts[0]
             status_code = int(parts[-2])
             file_size = int(parts[-1])
             # print(parts)
@@ -44,15 +43,16 @@ def main():
     """main function for handling everything"""
     lines = []
     try:
+        total_size = 0
         for line in sys.stdin:
             lines.append(line.strip())
             if len(lines) == 10:
-                total_size, status_code_count = compute_metrics(lines)
+                total_size, status_code_count = compute_metrics(lines, total_size)
                 print_metrics(total_size, status_code_count)
                 lines = []
 
     except KeyboardInterrupt:
-        total_size, status_code_count = compute_metrics(lines)
+        total_size, status_code_count = compute_metrics(lines, total_size)
         print_metrics(total_size, status_code_count)
 
 
