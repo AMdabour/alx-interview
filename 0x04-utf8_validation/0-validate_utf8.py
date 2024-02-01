@@ -27,5 +27,6 @@ def validUTF8(data):
             # Invalid starting byte
             return False
 
-    # Check if there are remaining bytes after iterating through the entire data
+    # Check if there are remaining bytes after
+    # iterating through the entire data
     return remaining_bytes == 0
