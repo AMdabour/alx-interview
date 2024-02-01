@@ -9,7 +9,7 @@ def validUTF8(data):
 
     for byte in data:
         if num_bytes == 0:
-            if (byte >> 5) == 0b110:
+            if (byte >> 5) == 0b110 or (byte >> 5) == 0b1110:
                 num_bytes = 1
             elif (byte >> 4) == 0b1110:
                 num_bytes = 2
